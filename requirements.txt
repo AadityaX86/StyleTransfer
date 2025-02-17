@@ -1,0 +1,19 @@
+numpy
+pandas
+jupyter
+matplotlib
+seaborn
+pytest
+tensorflow
+torch
+scikit-learn
+transformers
+flask
+pillow
+opencv-python
+timm
+
+# For Cuda Installation:
+# 1. Download Cuda Toolkit from Nvidia and Install.
+# 2. Download cuDNN Zip File. Extract the Zip and Paste the Files to the Cuda Toolkit Folder According to the Directories
+# 3. pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 (Install Newer Version if Required.)
