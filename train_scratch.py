@@ -108,12 +108,12 @@ for iteration in range(1, num_iterations + 1):
     scheduler.step()
 
     # Logging every 100 epochs
-    if iteration % 1 == 0:
-        avg_total_loss = total_loss_accum / 1
-        avg_content_loss = content_loss_accum / 1
-        avg_style_loss = style_loss_accum / 1
-        avg_identity_loss_1 = identity_loss_1_accum / 1
-        avg_identity_loss_2 = identity_loss_2_accum / 1
+    if iteration % 100 == 0:
+        avg_total_loss = total_loss_accum / 100
+        avg_content_loss = content_loss_accum / 100
+        avg_style_loss = style_loss_accum / 100
+        avg_identity_loss_1 = identity_loss_1_accum / 100
+        avg_identity_loss_2 = identity_loss_2_accum / 100
         
         logger.log_scalars("Losses",{
             "Avg Total Loss": avg_total_loss,
@@ -122,7 +122,7 @@ for iteration in range(1, num_iterations + 1):
             "Identity Loss 1": avg_identity_loss_1,
             "Identity Loss 2": avg_identity_loss_2
         }, iteration)
-        print(f"Iteration {iteration}: Avg Total Loss: {avg_total_loss}, Avg Content Loss: {avg_content_loss}, Avg Style Loss: {avg_style_loss}, Identity Loss 1: {identity_loss_1.item()}, Identity Loss 2: {identity_loss_2.item()}")
+        print(f"Iteration {iteration}: Total Loss: {avg_total_loss}, Content Loss: {avg_content_loss}, Style Loss: {avg_style_loss}, IL_1: {identity_loss_1.item()}, IL_2: {identity_loss_2.item()}")
         
         # Reset accumulators
         total_loss_accum = 0

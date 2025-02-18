@@ -104,11 +104,13 @@ if __name__ == "__main__":
     style_target = torch.rand(2, 3, 256, 256)
 
     # Initialize the loss function with weights for content and style
-    loss_fn = ContentStyleLoss(alpha=5.0, beta=1.0)
+    loss_fn = ContentStyleLoss()
 
     # Compute the total loss, content loss, and style loss
-    total_loss, content_loss, style_loss = loss_fn(output, content_target, style_target)
+    total_loss, content_loss, style_loss, identity_loss_1, identity_loss_2 = loss_fn(output, content_target, style_target)
 
+    print(f"Total Loss: {total_loss.item()}")
     print(f"Content Loss: {content_loss.item()}")
     print(f"Style Loss: {style_loss.item()}")
-    print(f"Total Loss: {total_loss.item()}")
+    print(f"Identity_Loss_1: {identity_loss_1.item()}")
+    print(f"Identity_Loss_2: {identity_loss_2.item()}")
