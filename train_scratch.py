@@ -14,7 +14,7 @@ from NetworkLogger import NetworkLogger
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 batch_size = 2
 num_iterations = 80000  # Total number of training iterations
-learning_rate = 1e-4
+learning_rate = 0.5e-4
 
 dataset_content = SimpleDataset('./Data/train/content', transforms=T.ToTensor())
 dataset_style = SimpleDataset('./Data/train/style', transforms=T.ToTensor())
@@ -109,12 +109,12 @@ for iteration in range(1, num_iterations + 1):
     scheduler.step()
 
     # Logging every 100 epochs
-    if iteration % 100 == 0:
-        avg_total_loss = total_loss_accum / 100
-        avg_content_loss = content_loss_accum / 100
-        avg_style_loss = style_loss_accum / 100
-        avg_identity_loss_1 = identity_loss_1_accum / 100
-        avg_identity_loss_2 = identity_loss_2_accum / 100
+    if iteration % 10 == 0:
+        avg_total_loss = total_loss_accum / 10
+        avg_content_loss = content_loss_accum / 10
+        avg_style_loss = style_loss_accum / 10
+        avg_identity_loss_1 = identity_loss_1_accum / 10
+        avg_identity_loss_2 = identity_loss_2_accum / 10
         
         logger.log_scalars("Losses",{
             "Avg Total Loss": avg_total_loss,
@@ -142,7 +142,7 @@ for iteration in range(1, num_iterations + 1):
             'optimizer': optimizer.state_dict(),
             'scheduler': scheduler.state_dict(),
             'iteration': iteration
-        }, f"./checkpoints/model_iter_{iteration}.pth")
+        }, f"./.models/models_v20/model_iter_{iteration}.pth")
         print(f"Checkpoint saved at iteration {iteration}")
 
 print("Training complete!")
