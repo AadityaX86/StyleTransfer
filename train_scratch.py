@@ -26,18 +26,6 @@ dataloader_style_iter = iter(DataLoader(dataset_style, batch_size=batch_size, sa
 # Initialize TensorBoard logger
 logger = NetworkLogger("./.logs/logs_v20/")
 
-# Initialize modules
-# encoder_content = Encoder(
-#     img_size=224,
-#     patch_size=2,
-#     in_chans=3,
-#     embed_dim=192,
-#     depths=[2, 2, 2],
-#     nhead=[3, 6, 12],
-#     strip_width=[2, 4, 7],
-#     drop_path_rate=0.,
-#     patch_norm=True
-# ).to(device)
 encoder = Encoder(
     img_size=256,
     patch_size=2,
@@ -55,7 +43,7 @@ decoder = Decoder(in_channels=768).to(device)
 loss_fn = ContentStyleLoss().to(device)
 
 # Optimizer and learning rate scheduler
-optimizer = optim.Adam(list(encoder_content.parameters()) + list(encoder_style.parameters()) + list(transfer_module.parameters()) + list(decoder.parameters()), lr=learning_rate)
+optimizer = optim.Adam(list(encoder.parameters()) + list(transfer_module.parameters()) + list(decoder.parameters()), lr=learning_rate)
 scheduler = CosineAnnealingWarmUpLR(optimizer, warmup_step=80000//4, max_step=80000, min_lr=0)
 
 # Set the models to training mode

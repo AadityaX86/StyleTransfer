@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from Encoder import DropPath, Mlp, Attention, Attention_Cross
+from .Encoder import DropPath, Mlp, Attention, Attention_Cross
 
 class TransModule_Config():
   def __init__(
