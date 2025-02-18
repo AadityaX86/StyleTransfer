@@ -27,19 +27,19 @@ dataloader_style_iter = iter(DataLoader(dataset_style, batch_size=batch_size, sa
 logger = NetworkLogger("./.logs/logs_v20/")
 
 # Initialize modules
-encoder_content = Encoder(
-    img_size=224,
-    patch_size=2,
-    in_chans=3,
-    embed_dim=192,
-    depths=[2, 2, 2],
-    nhead=[3, 6, 12],
-    strip_width=[2, 4, 7],
-    drop_path_rate=0.,
-    patch_norm=True
-).to(device)
-encoder_style = Encoder(
-    img_size=224,
+# encoder_content = Encoder(
+#     img_size=224,
+#     patch_size=2,
+#     in_chans=3,
+#     embed_dim=192,
+#     depths=[2, 2, 2],
+#     nhead=[3, 6, 12],
+#     strip_width=[2, 4, 7],
+#     drop_path_rate=0.,
+#     patch_norm=True
+# ).to(device)
+encoder = Encoder(
+    img_size=256,
     patch_size=2,
     in_chans=3,
     embed_dim=192,
@@ -59,8 +59,7 @@ optimizer = optim.Adam(list(encoder_content.parameters()) + list(encoder_style.p
 scheduler = CosineAnnealingWarmUpLR(optimizer, warmup_step=80000//4, max_step=80000, min_lr=0)
 
 # Set the models to training mode
-encoder_content.train()
-encoder_style.train()
+encoder.train()
 transfer_module.train()
 decoder.train()
 
@@ -76,8 +75,8 @@ for iteration in range(1, num_iterations + 1):
     style_images = next(dataloader_style_iter).to(device)
 
     # Encode content and style images
-    content_features = encoder_content(content_images)[0]
-    style_features = encoder_style(style_images)[0]
+    content_features = encoder(content_images)[0]
+    style_features = encoder(style_images)[0]
 
     # Transfer style
     transformed_features = transfer_module(content_features, style_features)
@@ -135,8 +134,7 @@ for iteration in range(1, num_iterations + 1):
     # Save model checkpoints every 1000 epochs
     if iteration % 1000 == 0:
         torch.save({
-            'encoder_content': encoder_content.state_dict(),
-            'encoder_style': encoder_style.state_dict(),
+            'encoder': encoder.state_dict(),
             'transfer_module': transfer_module.state_dict(),
             'decoder': decoder.state_dict(),
             'optimizer': optimizer.state_dict(),
