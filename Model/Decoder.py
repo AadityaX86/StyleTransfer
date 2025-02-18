@@ -58,7 +58,7 @@ class Decoder(nn.Module):
     
     def forward(self, x):
         B, N, C = x.shape
-        x = x.permute(0, 2, 1).reshape(B, C, 28, 28)
+        x = x.permute(0, 2, 1).reshape(B, C, 32, 32)
 
         output = self.layers(x)
 
@@ -68,6 +68,6 @@ class Decoder(nn.Module):
 
 if __name__ == "__main__":
     Y = Decoder()
-    Y = Y.forward(torch.randn(2, 784, 768))
+    Y = Y.forward(torch.randn(2, 1024, 768))
 
     print(Y.shape)

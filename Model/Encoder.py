@@ -684,7 +684,7 @@ if __name__ == '__main__':
     
     # Example
     model = Encoder(
-    img_size=224,
+    img_size=256,
     patch_size=2,
     in_chans=3,
     embed_dim=192,
@@ -695,7 +695,7 @@ if __name__ == '__main__':
     patch_norm=True
     )
 
-    x = torch.randn(2, 3, 224, 224)
+    x = torch.randn(2, 3, 256, 256)
         
     y = model(x, arbitrary_input=True)
     print(y[0].shape, y[2])
