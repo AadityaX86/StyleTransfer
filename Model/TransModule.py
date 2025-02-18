@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from .Encoder import DropPath, Mlp, Attention, Attention_Cross
+from Encoder import DropPath, Mlp, Attention, Attention_Cross
 
 class TransModule_Config():
   def __init__(
@@ -140,8 +140,8 @@ if __name__ == "__main__":
     trans_module = TransModule(config)
 
     # Dummy input tensors
-    content_feature = torch.randn(1, 784, 768)  
-    style_feature = torch.randn(1, 784, 768)   
+    content_feature = torch.randn(1, 1024, 768)  
+    style_feature = torch.randn(1, 1024, 768)   
 
     # Forward pass
     output = trans_module(content_feature, style_feature)
