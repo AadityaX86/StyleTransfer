@@ -27,7 +27,7 @@ dataloader_style_iter = iter(DataLoader(dataset_style, batch_size=batch_size, sa
 logger = NetworkLogger("./.logs/logs_v21/")
 
 encoder = Encoder(
-    img_size=256,
+    img_size=224,
     patch_size=2,
     in_chans=3,
     embed_dim=192,
