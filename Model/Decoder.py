@@ -58,7 +58,7 @@ class Decoder(nn.Module):
     
     def forward(self, x):
         B, N, C = x.shape
-        x = x.permute(0, 2, 1).reshape(B, C, 32, 32)
+        x = x.permute(0, 2, 1).reshape(B, C, 28, 28)
 
         output = self.layers(x)
 

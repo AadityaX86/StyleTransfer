@@ -16,15 +16,15 @@ batch_size = 2
 num_iterations = 80000  # Total number of training iterations
 learning_rate = 0.5e-4
 
-dataset_content = SimpleDataset('./Data/train/content', transforms=T.ToTensor())
-dataset_style = SimpleDataset('./Data/train/style', transforms=T.ToTensor())
+dataset_content = SimpleDataset('./Data/train/content_224', transforms=T.ToTensor())
+dataset_style = SimpleDataset('./Data/train/style_224', transforms=T.ToTensor())
 sampler_content = InfiniteSamplerWrapper(dataset_content)
 sampler_style = InfiniteSamplerWrapper(dataset_style)
 dataloader_content_iter = iter(DataLoader(dataset_content, batch_size=batch_size, sampler=sampler_content, num_workers=0))
 dataloader_style_iter = iter(DataLoader(dataset_style, batch_size=batch_size, sampler=sampler_style, num_workers=0))
 
 # Initialize TensorBoard logger
-logger = NetworkLogger("./.logs/logs_v20/")
+logger = NetworkLogger("./.logs/logs_v21/")
 
 encoder = Encoder(
     img_size=256,
@@ -128,7 +128,7 @@ for iteration in range(1, num_iterations + 1):
             'optimizer': optimizer.state_dict(),
             'scheduler': scheduler.state_dict(),
             'iteration': iteration
-        }, f"./.models/models_v20/model_iter_{iteration}.pth")
+        }, f"./.models/models_v21/model_iter_{iteration}.pth")
         print(f"Checkpoint saved at iteration {iteration}")
 
 print("Training complete!")
