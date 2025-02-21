@@ -43,7 +43,7 @@ def mean_variance_norm(feat):
 
 # Content and Style Loss
 class ContentStyleLoss(nn.Module):
-    def __init__(self, alpha=2.0, beta=3.0, sigma = 50.0, gamma = 1.0):
+    def __init__(self, alpha=2.0, beta=5.0, sigma = 50.0, gamma = 1.0):
         """
         Initialize the loss function.
         :param alpha: Weight for content loss
