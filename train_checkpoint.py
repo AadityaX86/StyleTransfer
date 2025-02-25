@@ -17,7 +17,7 @@ num_iterations = 80000
 learning_rate = 0.5e-4
 
 start_iteration = 1
-checkpoint_path = './.models/models_v21/model_iter_16000.pth'  # Set this to the path of a checkpoint to resume training
+checkpoint_path = './.models/models_v21/model_iter_25000.pth'  # Set this to the path of a checkpoint to resume training
 
 # Datasets and loaders
 dataset_content = SimpleDataset('./Data/train/content_224', transforms=T.ToTensor())
