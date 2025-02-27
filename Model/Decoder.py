@@ -54,18 +54,13 @@ class Decoder(nn.Module):
             nn.Conv2d(64, final_channels, kernel_size=3, stride=1, padding=0),
         )
     
-    def forward(self, x, input_resolution=None):
-        if self.seq_input:
-            B, N, C = x.shape
-            if input_resolution is None:
-                H = W = int(N ** 0.5)  # Dynamically infer square resolution
-            else:
-                H, W = input_resolution
+    def forward(self, x, input_resolution):
+        if self.seq_input == True:
+            B, N, C = x.size()
+            (H, W) = input_resolution
             x = x.permute(0, 2, 1).reshape(B, C, H, W)
-
-        output = self.decoder(x)
-        output = torch.sigmoid(output)  # Normalize output to (0,1)
-        return output
+            x = self.decoder(x)  
+            return x
 
 # Testing
 if __name__ == "__main__":
