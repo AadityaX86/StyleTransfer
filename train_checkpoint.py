@@ -17,7 +17,7 @@ num_iterations = 80000
 learning_rate = 0.5e-4
 
 start_iteration = 1
-checkpoint_path = './.models/models_v21/model_iter_25000.pth'  # Set this to the path of a checkpoint to resume training
+checkpoint_path = './.models/models_v0/model_iter_0.pth'  # Set this to the path of a checkpoint to resume training
 
 # Datasets and loaders
 dataset_content = SimpleDataset('./Data/train/content_224', transforms=T.ToTensor())
@@ -28,7 +28,7 @@ dataloader_content_iter = iter(DataLoader(dataset_content, batch_size=batch_size
 dataloader_style_iter = iter(DataLoader(dataset_style, batch_size=batch_size, sampler=sampler_style, num_workers=0))
 
 # Initialize TensorBoard logger
-logger = NetworkLogger("./.logs/logs_v21/")
+logger = NetworkLogger("./.logs/logs_v0/")
 
 # Models
 encoder = Encoder(
@@ -136,7 +136,7 @@ for iteration in range(start_iteration, num_iterations + 1):
             'optimizer': optimizer.state_dict(),
             'scheduler': scheduler.state_dict(),
             'iteration': iteration
-        }, f"./.models/models_v21/model_iter_{iteration}.pth")
+        }, f"./.models/models_v0/model_iter_{iteration}.pth")
         print(f"Checkpoint saved at iteration {iteration}")
 
 print("Training complete!")

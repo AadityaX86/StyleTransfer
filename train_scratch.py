@@ -24,7 +24,7 @@ dataloader_content_iter = iter(DataLoader(dataset_content, batch_size=batch_size
 dataloader_style_iter = iter(DataLoader(dataset_style, batch_size=batch_size, sampler=sampler_style, num_workers=0))
 
 # Initialize TensorBoard logger
-logger = NetworkLogger("./.logs/logs_v21/")
+logger = NetworkLogger("./.logs/logs_v0/")
 
 encoder = Encoder(
     img_size=224,
@@ -128,7 +128,7 @@ for iteration in range(1, num_iterations + 1):
             'optimizer': optimizer.state_dict(),
             'scheduler': scheduler.state_dict(),
             'iteration': iteration
-        }, f"./.models/models_v21/model_iter_{iteration}.pth")
+        }, f"./.models/models_v0/model_iter_{iteration}.pth")
         print(f"Checkpoint saved at iteration {iteration}")
 
 print("Training complete!")
