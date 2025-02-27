@@ -695,7 +695,7 @@ if __name__ == '__main__':
     patch_norm=True
     )
 
-    x = torch.randn(2, 3, 256, 256)
+    x = torch.randn(2, 3, 500, 256)
         
     y = model(x, arbitrary_input=True)
     print(y[0].shape, y[2])
