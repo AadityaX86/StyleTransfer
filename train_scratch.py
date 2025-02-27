@@ -5,7 +5,7 @@ import torchvision.transforms as T
 from Model.Encoder import Encoder
 from Model.TransModule import TransModule, TransModule_Config
 from Model.Decoder import Decoder
-from Model.LossMSE import ContentStyleLoss
+from Model.Loss import ContentStyleLoss
 from Sampler import SimpleDataset, InfiniteSamplerWrapper
 from Scheduler import CosineAnnealingWarmUpLR
 from NetworkLogger import NetworkLogger
