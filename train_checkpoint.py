@@ -5,7 +5,7 @@ import torchvision.transforms as T
 from Model.Encoder import Encoder
 from Model.TransModule import TransModule, TransModule_Config
 from Model.Decoder import Decoder
-from Model.LossMSE import ContentStyleLoss
+from Model.Loss import ContentStyleLoss
 from Sampler import SimpleDataset, InfiniteSamplerWrapper
 from Scheduler import CosineAnnealingWarmUpLR
 from NetworkLogger import NetworkLogger
@@ -13,22 +13,22 @@ from NetworkLogger import NetworkLogger
 # Configuration
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 batch_size = 2
-num_iterations = 80000
+num_iterations = 50000
 learning_rate = 0.5e-4
 
 start_iteration = 1
-checkpoint_path = './.models/models_v21/model_iter_25000.pth'  # Set this to the path of a checkpoint to resume training
+checkpoint_path = './.models/model_complete/checkpoint_40000_epoch.pkl'  # Set this to the path of a checkpoint to resume training
 
 # Datasets and loaders
-dataset_content = SimpleDataset('./Data/train/content_224', transforms=T.ToTensor())
-dataset_style = SimpleDataset('./Data/train/style_224', transforms=T.ToTensor())
+dataset_content = SimpleDataset('./Data/train_nepali/content_224', transforms=T.ToTensor())
+dataset_style = SimpleDataset('./Data/train_nepali/style_224', transforms=T.ToTensor())
 sampler_content = InfiniteSamplerWrapper(dataset_content)
 sampler_style = InfiniteSamplerWrapper(dataset_style)
 dataloader_content_iter = iter(DataLoader(dataset_content, batch_size=batch_size, sampler=sampler_content, num_workers=0))
 dataloader_style_iter = iter(DataLoader(dataset_style, batch_size=batch_size, sampler=sampler_style, num_workers=0))
 
 # Initialize TensorBoard logger
-logger = NetworkLogger("./.logs/logs_v21/")
+logger = NetworkLogger("./.logs/logs_checkpoint/")
 
 # Models
 encoder = Encoder(
@@ -44,22 +44,26 @@ encoder = Encoder(
 ).to(device)
 trans_config = TransModule_Config(nlayer=3, d_model=768, nhead=8, norm_first=True)
 transfer_module = TransModule(config=trans_config).to(device)
-decoder = Decoder(in_channels=768).to(device)
+decoder = Decoder(d_model=768, seq_input=True).to(device)
 loss_fn = ContentStyleLoss().to(device)
 
 # Optimizer and scheduler
-optimizer = optim.Adam(list(encoder.parameters()) + list(transfer_module.parameters()) + list(decoder.parameters()), lr=learning_rate)
-scheduler = CosineAnnealingWarmUpLR(optimizer, warmup_step=80000//4, max_step=80000, min_lr=0)
+optimizer = optim.Adam([
+    {'params': encoder.parameters()},
+    {'params': decoder.parameters()},
+    {'params': transfer_module.parameters()},
+], lr = learning_rate)
+scheduler = CosineAnnealingWarmUpLR(optimizer, warmup_step=10000//4, max_step=10000, min_lr=0)
 
 # Load from checkpoint
 if checkpoint_path:
     checkpoint = torch.load(checkpoint_path)
     encoder.load_state_dict(checkpoint['encoder'])
-    transfer_module.load_state_dict(checkpoint['transfer_module'])
+    transfer_module.load_state_dict(checkpoint['transModule'])
     decoder.load_state_dict(checkpoint['decoder'])
     optimizer.load_state_dict(checkpoint['optimizer'])
     scheduler.load_state_dict(checkpoint['scheduler'])
-    start_iteration = checkpoint['iteration'] + 1
+    start_iteration = checkpoint['epoch'] + 1
     print(f"Resuming training from iteration {start_iteration}")
 
 # Set models to training mode
@@ -78,20 +82,27 @@ for iteration in range(start_iteration, num_iterations + 1):
     content_images = next(dataloader_content_iter).to(device)
     style_images = next(dataloader_style_iter).to(device)
 
-    content_features = encoder(content_images)[0]
-    style_features = encoder(style_images)[0]
+    # Forward pass through encoders
+    forward_content = encoder(content_images)  # [b, h, w, c]
+    forward_style = encoder(style_images)      # [b, h, w, c]
 
-    transformed_features = transfer_module(content_features, style_features)
-    stylized_images = decoder(transformed_features)
+    content_features, content_res = forward_content[0], forward_content[2]  # [b, c, h, w]
+    style_features, style_res = forward_style[0], forward_style[2]      # [b, c, h, w]
+
+    # Merge the features
+    merged_features = transfer_module(content_features, style_features)
+
+    # Decode the merged features
+    output = decoder(merged_features, content_res)  # [b, c, h, w]
 
     identity_features_content = transfer_module(content_features, content_features)
     identity_features_style = transfer_module(style_features, style_features)
 
-    identity_image_content = decoder(identity_features_content)
-    identity_image_style = decoder(identity_features_style)
+    identity_image_content = decoder(identity_features_content, content_res)
+    identity_image_style = decoder(identity_features_style, style_res)
 
     total_loss, content_loss, style_loss, identity_loss_1, identity_loss_2 = loss_fn(
-        stylized_images, identity_image_content, identity_image_style, content_images, style_images
+        output, identity_image_content, identity_image_style, content_images, style_images
     )
 
     total_loss_accum += total_loss.item()
@@ -136,7 +147,7 @@ for iteration in range(start_iteration, num_iterations + 1):
             'optimizer': optimizer.state_dict(),
             'scheduler': scheduler.state_dict(),
             'iteration': iteration
-        }, f"./.models/models_v21/model_iter_{iteration}.pth")
+        }, f"./.models/models_checkpoint/model_iter_{iteration}.pkl")
         print(f"Checkpoint saved at iteration {iteration}")
 
 print("Training complete!")

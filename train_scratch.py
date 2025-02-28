@@ -5,7 +5,7 @@ import torchvision.transforms as T
 from Model.Encoder import Encoder
 from Model.TransModule import TransModule, TransModule_Config
 from Model.Decoder import Decoder
-from Model.LossMSE import ContentStyleLoss
+from Model.Loss import ContentStyleLoss
 from Sampler import SimpleDataset, InfiniteSamplerWrapper
 from Scheduler import CosineAnnealingWarmUpLR
 from NetworkLogger import NetworkLogger
@@ -24,7 +24,7 @@ dataloader_content_iter = iter(DataLoader(dataset_content, batch_size=batch_size
 dataloader_style_iter = iter(DataLoader(dataset_style, batch_size=batch_size, sampler=sampler_style, num_workers=0))
 
 # Initialize TensorBoard logger
-logger = NetworkLogger("./.logs/logs_v21/")
+logger = NetworkLogger("./.logs/logs_scratch/")
 
 encoder = Encoder(
     img_size=224,
@@ -39,11 +39,15 @@ encoder = Encoder(
 ).to(device)
 trans_config = TransModule_Config(nlayer=3, d_model=768, nhead=8, norm_first=True)
 transfer_module = TransModule(config=trans_config).to(device)
-decoder = Decoder(in_channels=768).to(device)
+decoder = Decoder(d_model=768, seq_input=True).to(device)
 loss_fn = ContentStyleLoss().to(device)
 
 # Optimizer and learning rate scheduler
-optimizer = optim.Adam(list(encoder.parameters()) + list(transfer_module.parameters()) + list(decoder.parameters()), lr=learning_rate)
+optimizer = optim.Adam([
+    {'params': encoder.parameters()},
+    {'params': decoder.parameters()},
+    {'params': transfer_module.parameters()},
+], lr = learning_rate)
 scheduler = CosineAnnealingWarmUpLR(optimizer, warmup_step=80000//4, max_step=80000, min_lr=0)
 
 # Set the models to training mode
@@ -62,40 +66,38 @@ for iteration in range(1, num_iterations + 1):
     content_images = next(dataloader_content_iter).to(device)
     style_images = next(dataloader_style_iter).to(device)
 
-    # Encode content and style images
-    content_features = encoder(content_images)[0]
-    style_features = encoder(style_images)[0]
+    # Forward pass through encoders
+    forward_content = encoder(content_images)  # [b, h, w, c]
+    forward_style = encoder(style_images)      # [b, h, w, c]
 
-    # Transfer style
-    transformed_features = transfer_module(content_features, style_features)
+    content_features, content_res = forward_content[0], forward_content[2]  # [b, c, h, w]
+    style_features, style_res = forward_style[0], forward_style[2]      # [b, c, h, w]
 
-    # Decode transformed features to generate stylized image
-    stylized_images = decoder(transformed_features)
+    # Merge the features
+    merged_features = transfer_module(content_features, style_features)
 
-    # For identity losses
+    # Decode the merged features
+    output = decoder(merged_features, content_res)  # [b, c, h, w]
+
     identity_features_content = transfer_module(content_features, content_features)
     identity_features_style = transfer_module(style_features, style_features)
 
-    identity_image_content = decoder(identity_features_content)
-    identity_image_style = decoder(identity_features_style)
+    identity_image_content = decoder(identity_features_content, content_res)
+    identity_image_style = decoder(identity_features_style, style_res)
 
-    # Compute loss
-    total_loss, content_loss, style_loss, identity_loss_1, identity_loss_2 = loss_fn(stylized_images, identity_image_content, identity_image_style, content_images, style_images)
+    total_loss, content_loss, style_loss, identity_loss_1, identity_loss_2 = loss_fn(output, identity_image_content, identity_image_style, content_images, style_images)
     
-    # Accumulate losses
     total_loss_accum += total_loss.item()
     content_loss_accum += content_loss.item()
     style_loss_accum += style_loss.item()
     identity_loss_1_accum += identity_loss_1.item()
     identity_loss_2_accum += identity_loss_2.item()
     
-    # Backpropagation and optimization
     optimizer.zero_grad()
     total_loss.backward()
     optimizer.step()
     scheduler.step()
 
-    # Logging every 100 epochs
     if iteration % 10 == 0:
         avg_total_loss = total_loss_accum / 10
         avg_content_loss = content_loss_accum / 10
@@ -112,14 +114,12 @@ for iteration in range(1, num_iterations + 1):
         }, iteration)
         print(f"Iteration {iteration}: Total Loss: {avg_total_loss}, Content Loss: {avg_content_loss}, Style Loss: {avg_style_loss}, IL_1: {identity_loss_1.item()}, IL_2: {identity_loss_2.item()}")
         
-        # Reset accumulators
         total_loss_accum = 0
         content_loss_accum = 0
         style_loss_accum = 0
         identity_loss_1_accum = 0
         identity_loss_2_accum = 0
 
-    # Save model checkpoints every 1000 epochs
     if iteration % 1000 == 0:
         torch.save({
             'encoder': encoder.state_dict(),
@@ -128,7 +128,7 @@ for iteration in range(1, num_iterations + 1):
             'optimizer': optimizer.state_dict(),
             'scheduler': scheduler.state_dict(),
             'iteration': iteration
-        }, f"./.models/models_v21/model_iter_{iteration}.pth")
+        }, f"./.models/models_scratch/model_iter_{iteration}.pth")
         print(f"Checkpoint saved at iteration {iteration}")
 
 print("Training complete!")
