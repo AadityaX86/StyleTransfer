@@ -12,6 +12,7 @@ flask
 pillow
 opencv-python
 timm
+scikit-image
 
 # For Cuda Installation:
 # 1. Download Cuda Toolkit from Nvidia and Install.
