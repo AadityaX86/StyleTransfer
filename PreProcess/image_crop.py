@@ -2,7 +2,7 @@ from PIL import Image
 import numpy as np
 import os
 
-def preprocess_image_with_resize_then_crop(image_path, target_size=256, output_dir=None):
+def preprocess_image_with_resize_then_crop(image_path, target_size=224, output_dir=None):
     try:
         # Open the image and ensure it's not corrupted
         img = Image.open(image_path).convert("RGB")  # Ensure 3 channels (RGB)
