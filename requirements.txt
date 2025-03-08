@@ -1,6 +1,5 @@
 torch       # According to CUDA Version
 torchvision # According to CUDA Version
-timm
 pillow
 jupyter
 flask # For Frontend
