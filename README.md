@@ -1,7 +1,7 @@
 # Style Transfer
 
-Implementation of Our Unofficial Bachelor's in Computer Engineering Minor Project Paper.<br>
-[Arbitrary Style Transfer for Nepali Landscapes and Sites using Transformers](https://drive.google.com/drive/folders/1FehV76RhBkTTr-fYzuRLq1Juu4DtJVnC?usp=sharing)
+Implementation of Our Bachelor's in Computer Engineering Minor Project Paper.<br>
+[Arbitrary Style Transfer for Nepali Landscapes and Sites using Transformers](https://drive.google.com/file/d/1R8rbPvl3D_ewrIzncPU__DkSjzLUnwjs/view?usp=drive_link)
 
 
 # Team Members
@@ -12,26 +12,46 @@ Implementation of Our Unofficial Bachelor's in Computer Engineering Minor Projec
 
 # Usage
 ### Inference/Testing on Local Machine
-- Clone the Repository<br>
-```
+## 1. Clone the Repository  
+```bash
 git clone https://github.com/AadityaX86/StyleTransfer.git
+cd StyleTransfer
 ```
-- Install Requirements<br>
-    - Install Python on Your Device (Python 3.11.*  Preferred)
-    - Read the `requirements.txt` File Carefully and Install the Requirements.<br><br>
-    ```
-    pip install -r requirements.txt
-    ```
-- Put the Content Image & Style Image in the `.\Evaluation` Directory and Rename to:<br>
-`.\image_content.*`<br>
-`.\image_style.*`<br>
-`.jpg` & `.png` Format are Preferred
 
-- Run the Code
-    - Run the Following Python Command in Your Terminal<br><br>
-    ```
-    python .\main.py
-    ```
+## 2. Set Up a Virtual Environment  
+It is recommended to use a virtual environment to manage dependencies.  
+
+- **For Windows**  
+  ```bash
+  python -m venv venv
+  venv\Scripts\activate
+  ```
+
+- **For macOS/Linux**  
+  ```bash
+  python -m venv venv
+  source venv/bin/activate
+  ```
+
+## 3. Install Requirements  
+Ensure you have Python installed (Python 3.11.* preferred).  
+Then, install dependencies from `requirements.txt`:  
+```bash
+pip install -r requirements.txt
+```
+
+## 4. Prepare Input Images  
+Place your content and style images in the `./Evaluation` directory and rename them as follows:  
+- **Content Image** → `image_content.*`  
+- **Style Image** → `image_style.*`  
+- Preferred formats: `.jpg` or `.png`  
+
+## 5. Run the Code  
+Execute the following command in your terminal:  
+```bash
+python main.py
+```
+
 ### Training on Local Machine
 - Make a Directory `.\Data\train\content` and `.\Data\train\style` and put respective Content Images and Style Images there.
 - Make a Directory `.\.models\models_scratch` and `.\.models\models_checkpoint` and put the Checkpoint Model there.
@@ -44,6 +64,8 @@ python .\train_scratch.py
 ```
 python .\train_checkpoint.py
 ```
+
+
 ### More Info
 
 - You can Download the Checkpoint At: [Checkpoint](https://drive.google.com/drive/folders/1UO77oZv8S5HGPnhdRRZnYzc43GS0R7WO?usp=drive_link)
