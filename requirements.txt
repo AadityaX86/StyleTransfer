@@ -1,19 +1,9 @@
-numpy
-pandas
-jupyter
-matplotlib
-seaborn
-pytest
-tensorflow
-torch
-scikit-learn
-transformers
-flask
-pillow
-opencv-python
+torch       # According to CUDA Version
+torchvision # According to CUDA Version
 timm
-scikit-image
-
+pillow
+jupyter
+flask # For Frontend
 # For Cuda Installation:
 # 1. Download Cuda Toolkit from Nvidia and Install.
 # 2. Download cuDNN Zip File. Extract the Zip and Paste the Files to the Cuda Toolkit Folder According to the Directories
