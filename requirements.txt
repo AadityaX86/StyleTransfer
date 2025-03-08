@@ -4,6 +4,7 @@ timm
 pillow
 jupyter
 flask # For Frontend
+werkzeug # For Frontend
 # For Cuda Installation:
 # 1. Download Cuda Toolkit from Nvidia and Install.
 # 2. Download cuDNN Zip File. Extract the Zip and Paste the Files to the Cuda Toolkit Folder According to the Directories
