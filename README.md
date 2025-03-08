@@ -55,8 +55,8 @@ python main.py
 
 ## Training on Local Machine
 - Make a Directory `.\Data\train\content` and `.\Data\train\style` and put respective Content Images and Style Images there.
-- Make a Directory `.\.models\models_scratch` and `.\.models\models_checkpoint` and put the Checkpoint Model there.
-- Make a Directory `.\.logs\logs_scratch` and `.\.logs\logs_checkpoint`
+- Make a Directory `.\.models\models_scratch` for Training from Scratch or `.\.models\models_checkpoint` for Training from Checkpoint
+- Make a Directory `.\.logs\logs_scratch` or `.\.logs\logs_checkpoint`
 - Run the Following Python Command in Your Terminal for Training from Scratch
 ```
 python .\train_scratch.py
@@ -70,4 +70,5 @@ python .\train_checkpoint.py
 ### More Info
 
 - You can Download the Checkpoint At: [Checkpoint](https://drive.google.com/drive/folders/1UO77oZv8S5HGPnhdRRZnYzc43GS0R7WO?usp=drive_link)
+  - The Checkpoint should be At: `.\.models\models_checkpoint`
 - You can also Check Out the Repository to Run Through the Website At: https://github.com/Abhijeet-KC/StyleTransferFrontEnd
