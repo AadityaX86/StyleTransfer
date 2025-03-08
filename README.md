@@ -44,6 +44,7 @@ python .\train_scratch.py
 ```
 python .\train_checkpoint.py
 ```
-### Run Through Website
+### More Info
 
+- You can Download the Checkpoint At: [Checkpoint](https://drive.google.com/drive/folders/1UO77oZv8S5HGPnhdRRZnYzc43GS0R7WO?usp=drive_link)
 - You can also Check Out the Repository to Run Through the Website At: https://github.com/Abhijeet-KC/StyleTransferFrontEnd
