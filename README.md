@@ -39,6 +39,7 @@ Then, install dependencies from `requirements.txt`:
 ```bash
 pip install -r requirements.txt
 ```
+***Make sure you have the [Checkpoint](#more-info) downloaded if you are not using your Trained Model***
 
 ### 4. Prepare Input Images  
 Place your content and style images in the `./Evaluation` directory and rename them as follows:  
