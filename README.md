@@ -11,14 +11,14 @@ Implementation of Our Bachelor's in Computer Engineering Minor Project Paper.<br
 [Lijan Shrestha](https://github.com/Lijan09)
 
 # Usage
-### Inference/Testing on Local Machine
-## 1. Clone the Repository  
+## Inference/Testing on Local Machine
+### 1. Clone the Repository  
 ```bash
 git clone https://github.com/AadityaX86/StyleTransfer.git
 cd StyleTransfer
 ```
 
-## 2. Set Up a Virtual Environment  
+### 2. Set Up a Virtual Environment  
 It is recommended to use a virtual environment to manage dependencies.  
 
 - **For Windows**  
@@ -33,26 +33,26 @@ It is recommended to use a virtual environment to manage dependencies.
   source venv/bin/activate
   ```
 
-## 3. Install Requirements  
+### 3. Install Requirements  
 Ensure you have Python installed (Python 3.11.* preferred).  
 Then, install dependencies from `requirements.txt`:  
 ```bash
 pip install -r requirements.txt
 ```
 
-## 4. Prepare Input Images  
+### 4. Prepare Input Images  
 Place your content and style images in the `./Evaluation` directory and rename them as follows:  
 - **Content Image** → `image_content.*`  
 - **Style Image** → `image_style.*`  
 - Preferred formats: `.jpg` or `.png`  
 
-## 5. Run the Code  
+### 5. Run the Code  
 Execute the following command in your terminal:  
 ```bash
 python main.py
 ```
 
-### Training on Local Machine
+## Training on Local Machine
 - Make a Directory `.\Data\train\content` and `.\Data\train\style` and put respective Content Images and Style Images there.
 - Make a Directory `.\.models\models_scratch` and `.\.models\models_checkpoint` and put the Checkpoint Model there.
 - Make a Directory `.\.logs\logs_scratch` and `.\.logs\logs_checkpoint`
