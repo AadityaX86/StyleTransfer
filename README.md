@@ -71,4 +71,5 @@ python .\train_checkpoint.py
 
 - You can Download the Checkpoint At: [Checkpoint](https://drive.google.com/drive/folders/1UO77oZv8S5HGPnhdRRZnYzc43GS0R7WO?usp=drive_link)
   - The Checkpoint should be At: `.\.models\models_checkpoint`
+- You can run high resolution images (HD/UHD) in    Google Colaboratory. `Recommendation - Choose the highest RAM available on GPU.`
 - You can also Check Out the Repository to Run Through the Website At: https://github.com/Abhijeet-KC/StyleTransferFrontEnd

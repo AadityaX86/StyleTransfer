@@ -179,6 +179,7 @@ Data/
 
 .logs/
 .models/
+.model/
 
 SwinT/
 
